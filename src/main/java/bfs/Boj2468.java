@@ -1,4 +1,4 @@
-package org.bfs;
+package bfs;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Boj2468 {
+
+    static int[] dx = {1, 0, -1, 0};
+    static int[] dy = {0, 1, 0, -1};
+    static int[][] lake;
+    static boolean[][] visited;
     public static class Point{
         int x;
         int y;
@@ -20,12 +25,11 @@ public class Boj2468 {
         int n = Integer.parseInt(br.readLine());
         int maxRain = 0;
         int answer = 0;
-        int[] dx = {1, 0, -1, 0};
-        int[] dy = {0, 1, 0, -1};
-        int[][] lake = new int[n][n];
-        boolean[][] visited = new boolean[lake.length][lake[0].length];
 
-        Queue<int[]> queue = new ArrayDeque<>();
+        lake = new int[n][n];
+        visited = new boolean[lake.length][lake[0].length];
+
+        Queue<Point> queue = new ArrayDeque<>();
 
         for (int y = 0; y < n; y++) {
             String s = br.readLine();
@@ -48,25 +52,26 @@ public class Boj2468 {
             for (int y = 0; y < n; y++) {
                 for(int x=0; x < n; x++){
                     if(lake[y][x] != 0 && visited[y][x]){
-                        queue.add(new int[]{x, y});
+                        queue.add(new Point(x,y));
 
                         while (!queue.isEmpty()) {
-                            int[] point = queue.poll();
-                            visited[point[1]][point[0]] = false;
+                            Point point = queue.poll();
+                            visited[point.y][point.x] = false;
 
                             for (int i = 0; i < 4; i++) {
-                                int cx = point[0] + dx[i];
-                                int cy = point[1] + dy[i];
+                                int cx = point.x + dx[i];
+                                int cy = point.y + dy[i];
 
                                 if (!is_range(cx, cy, n)) {continue;}
                                 if(!visited[cy][cx] || lake[cy][cx] == 0){continue;}
-                                queue.add(new int[]{cx, cy});
+                                queue.add(new Point(cx,cy));
                             }
                         }
                         area += 1;
                     }
                 }
             }
+            queue.clear();
 
             for (int y = 0; y < lake.length; y++) {
                 for(int x=0; x< lake[0].length; x++){
@@ -75,6 +80,7 @@ public class Boj2468 {
             }
 
             answer = Math.max(answer, area);
+
         }
         System.out.println(answer);
         br.close();

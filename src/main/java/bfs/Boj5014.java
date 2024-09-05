@@ -1,4 +1,4 @@
-package org.bfs;
+package bfs;
 
 import java.util.*;
 import java.util.stream.IntStream;
